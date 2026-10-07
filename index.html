@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Milhão da Manutenção</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/jogo.css">
+</head>
+<body>
+    <!-- Camadas de estrelas brilhantes -->
+    <div class="stars-layer stars-1"></div>
+    <div class="stars-layer stars-2"></div>
+    <div class="stars-layer stars-3"></div>
+    <div class="stars-layer stars-4"></div>
+
+    <!-- ========== TELA INICIAL ========== -->
+    <div id="screen-start" class="screen active">
+        <div class="game-card">
+            <div class="show-header">
+                <h1>O MILHÃO DA MANUTENÇÃO</h1>
+                <div class="subtitle">Hardware • Software • Redes</div>
+            </div>
+            <div class="game-body text-center">
+                <p class="intro-text">
+                    Teste seus conhecimentos e leve <strong>R$ 1.000.000</strong> para casa!
+                </p>
+
+                <div class="start-tank">
+                    <div class="start-fish"><i class="fa-solid fa-fish"></i></div>
+                    <div class="tank-label"><i class="fa-solid fa-water"></i> Aquário do Byte</div>
+                </div>
+
+                <button onclick="startGame()" class="btn-start">
+                    <i class="fa-solid fa-play"></i> INICIAR JOGO
+                </button>
+                <button onclick="showRules()" class="btn-rules">
+                    <i class="fa-solid fa-book"></i> Como Jogar / Regras
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TELA DE REGRAS ========== -->
+    <div id="screen-rules" class="screen">
+        <div class="game-card">
+            <div class="show-header">
+                <h1>REGRAS DA BANCADA</h1>
+            </div>
+            <div class="game-body">
+                <ul class="rules-list">
+                    <li>São <strong>10 perguntas</strong> de manutenção de computadores.</li>
+                    <li>Cada acerto aumenta seu prêmio. Se errar, o prêmio cai drasticamente.</li>
+                    <li>Você tem <strong>3 ajudas</strong> (uma de cada):
+                        <br>• <strong>Reset BIOS</strong> → elimina 2 erradas
+                        <br>• <strong>Fórum Tech</strong> → opinião dos especialistas
+                        <br>• <strong>Técnico Sênior</strong> → dica direta
+                    </li>
+                    <li>Pode <strong>PARAR</strong> a qualquer momento e garantir metade do prêmio acumulado.</li>
+                </ul>
+                <button onclick="backToMenu()" class="btn-back">Voltar ao Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TELA DO JOGO ========== -->
+    <div id="screen-game" class="screen">
+        <div class="game-card">
+            <div class="show-header">
+                <h1>O MILHÃO DA MANUTENÇÃO</h1>
+            </div>
+            <div class="game-body">
+                <div class="info-bar">
+                    <div>
+                        <div class="label">Pergunta</div>
+                        <div class="value"><span id="current-q">1</span>/10</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="label">Prêmio Atual</div>
+                        <div class="value" id="current-prize">R$ 0</div>
+                    </div>
+                    <div class="mini-tank">
+                        <div class="mini-fish"><i class="fa-solid fa-fish"></i></div>
+                    </div>
+                </div>
+
+                <div class="helps">
+                    <button id="help-bios" onclick="useBios()" class="help-btn">
+                        <i class="fa-solid fa-microchip"></i><br>Reset BIOS
+                    </button>
+                    <button id="help-forum" onclick="useForum()" class="help-btn">
+                        <i class="fa-solid fa-users"></i><br>Fórum Tech
+                    </button>
+                    <button id="help-senior" onclick="useSenior()" class="help-btn">
+                        <i class="fa-solid fa-headset"></i><br>Téc. Sênior
+                    </button>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-level" id="question-level">NÍVEL 1 - BÁSICO</div>
+                    <p class="question-text" id="question-text">Carregando pergunta...</p>
+                </div>
+
+                <div class="options" id="options-container">
+                    <button onclick="selectOption(0)" class="option-btn" id="opt-0">
+                        <span class="option-number">1</span>
+                        <span class="option-text">...</span>
+                    </button>
+                    <button onclick="selectOption(1)" class="option-btn" id="opt-1">
+                        <span class="option-number">2</span>
+                        <span class="option-text">...</span>
+                    </button>
+                    <button onclick="selectOption(2)" class="option-btn" id="opt-2">
+                        <span class="option-number">3</span>
+                        <span class="option-text">...</span>
+                    </button>
+                    <button onclick="selectOption(3)" class="option-btn" id="opt-3">
+                        <span class="option-number">4</span>
+                        <span class="option-text">...</span>
+                    </button>
+                </div>
+
+                <div class="actions">
+                    <button onclick="stopGame()" class="btn-stop">
+                        <i class="fa-solid fa-hand"></i> PARAR<br>
+                        <small id="stop-val">R$ 0</small>
+                    </button>
+                    <button onclick="confirmAnswer()" id="btn-confirm" class="btn-confirm" disabled>
+                        <i class="fa-solid fa-check"></i> RESPONDER
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TELA FINAL ========== -->
+    <div id="screen-end" class="screen">
+        <div class="game-card">
+            <div class="show-header">
+                <h1 id="end-title">FIM DE JOGO</h1>
+            </div>
+            <div class="game-body text-center">
+                <p id="end-message" class="end-message"></p>
+                <div class="end-prize" id="end-prize">R$ 0</div>
+                <button onclick="backToMenu()" class="btn-start">
+                    <i class="fa-solid fa-rotate-right"></i> Jogar Novamente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ajuda -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content help-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalTitle">Ajuda</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="helpModalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-sm text-dark fw-bold w-100" data-bs-dismiss="modal">Entendi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/script js/script.js"></script>
+</body>
+</html>
